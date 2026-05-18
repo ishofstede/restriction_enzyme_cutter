@@ -1,19 +1,35 @@
 package nl.bioinf.ishofstede.controller;
 
+import nl.bioinf.ishofstede.service.AnalysisService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class SequenceController {
 
-    //homepage mapping init
+    private final AnalysisService analysisService;
 
-    //analysispage mapping init
+    public SequenceController(AnalysisService analysisService) {
+        this.analysisService = analysisService;
+    }
 
-    // recieve dna seq input from user req
-    //returns true if valid, otherwise false
-    //store seq so it can be shown in results page
-    //store valid result for display
-    //return results
+    @GetMapping("/")
+    public String home() {
+        return "index";
+    }
 
+    @PostMapping("/analyze")
+    public String analyze(
+            @RequestParam String sequence,
+            Model model
+    ) {
 
+        boolean valid = analysisService.isValidDNA(sequence);
+
+        model.addAttribute("sequence", sequence);
+        model.addAttribute("valid", valid);
+
+        return "results";
+    }
 }

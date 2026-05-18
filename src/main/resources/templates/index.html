@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>DNA Restriction Analyzer</title>
 </head>
 <body>
+
+<h1>DNA Restriction Analyzer</h1>
+
+<form action="/analyze" method="post">
+
+    <label for="sequence">DNA Sequence:</label>
+    <br>
+
+    <textarea
+            id="sequence"
+            name="sequence"
+            rows="10"
+            cols="60">
+    </textarea>
+
+    <br><br>
+
+    <button type="submit">
+        Analyze
+    </button>
+
+</form>
 
 </body>
 </html>

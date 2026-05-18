@@ -5,10 +5,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class AnalysisService {
 
-    public boolean isValidDNA(String sequence){
-        //if seq = null return false
+    public boolean isValidDNA(String sequence) {
+
+        if (sequence == null) {
+            return false;
+        }
+
+        sequence = sequence
+                .replaceAll("\\s+", "")
+                .toUpperCase();
+
+        return sequence.matches("[ACGT]+");
     }
-    //check for whitespace and ignore it
-    //to upper case
-    //return seq if matching ACGT
 }
