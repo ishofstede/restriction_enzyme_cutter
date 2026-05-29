@@ -25,9 +25,14 @@ public class SequenceController {
             Model model
     ) {
 
-        boolean valid = analysisService.isValidDNA(sequence);
+        String cleanedSequence =
+                analysisService.cleanSequence(sequence);
 
-        model.addAttribute("sequence", sequence);
+        boolean valid =
+                analysisService.isValidDNA(cleanedSequence);
+
+        model.addAttribute("originalInput", sequence);
+        model.addAttribute("cleanedSequence", cleanedSequence);
         model.addAttribute("valid", valid);
 
         return "results";

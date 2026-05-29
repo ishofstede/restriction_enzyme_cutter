@@ -3,13 +3,18 @@
 <head>
     <title>Results</title>
 </head>
+
 <body>
 
 <h1>Analysis Result</h1>
 
-<h2>Submitted Sequence</h2>
+<h2>Original Input</h2>
 
-<p th:text="${sequence}"></p>
+<pre th:text="${originalInput}"></pre>
+
+<h2>Cleaned Sequence</h2>
+
+<p th:text="${cleanedSequence}"></p>
 
 <h2>Validation</h2>
 
@@ -24,4 +29,3 @@
 <a href="/">Back</a>
 
 </body>
-</html>
