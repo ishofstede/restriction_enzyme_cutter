@@ -2,12 +2,12 @@ package nl.bioinf.ishofstede.model;
 
 public class Fragment {
 
-    private int start;
-    private int end;
-    private int length;
-    private double gcPercent;
-    private double molecularWeight;
-    private String sequence;
+    private final int start;
+    private final int end;
+    private final int length;
+    private final double gcPercent;
+    private final double molecularWeight;
+    private final String sequence;
 
     public Fragment(int start,
             int end,

@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 
 public class AnalysisResult {
 
-    private String sequence;
-    private String enzymeName;
-    private List<Fragment> fragments;
-    private LocalDateTime timestamp;
+    private final String sequence;
+    private final String enzymeName;
+    private final List<Fragment> fragments;
+    private final LocalDateTime timestamp;
 
     public AnalysisResult(
             String sequence,

@@ -3,8 +3,12 @@ package nl.bioinf.ishofstede.controller;
 import nl.bioinf.ishofstede.model.AnalysisResult;
 import nl.bioinf.ishofstede.model.Fragment;
 import nl.bioinf.ishofstede.model.RestrictionEnzyme;
-import nl.bioinf.ishofstede.service.AnalysisService;
+import nl.bioinf.ishofstede.service.EnzymeService;
+import nl.bioinf.ishofstede.service.FastaService;
+import nl.bioinf.ishofstede.service.SequenceService;
+import nl.bioinf.ishofstede.service.FragmentAnalysisService;
 import nl.bioinf.ishofstede.service.HistoryService;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +24,23 @@ import java.util.List;
 @Controller
 public class SequenceController {
 
-    private final AnalysisService analysisService;
-    private final HistoryService historyService;
+    private final SequenceService sequenceService;
+    private final EnzymeService enzymeService;
+    private final FragmentAnalysisService fragmentAnalysisService;
+    private final FastaService fastaService;
+    private final HistoryService historyService;;
 
-    public SequenceController(AnalysisService analysisService, HistoryService historyService) {
-        this.analysisService = analysisService;
+    public SequenceController(
+            SequenceService sequenceService,
+            EnzymeService enzymeService,
+            FragmentAnalysisService fragmentAnalysisService,
+            FastaService fastaService,
+            HistoryService historyService)
+    {
+        this.sequenceService = sequenceService;
+        this.enzymeService = enzymeService;
+        this.fragmentAnalysisService = fragmentAnalysisService;
+        this.fastaService = fastaService;
         this.historyService = historyService;
     }
 
@@ -33,7 +49,7 @@ public class SequenceController {
 
         model.addAttribute(
                 "enzymes",
-                analysisService.getEnzymes()
+                enzymeService.getEnzymes()
         );
 
         return "index";
@@ -47,11 +63,11 @@ public class SequenceController {
             Model model
     ) {
 
-        String cleanedSequence = analysisService.cleanSequence(sequence);
-        String errorMessage = analysisService.validateSequence(cleanedSequence);
+        String cleanedSequence = sequenceService.cleanSequence(sequence);
+        String errorMessage = sequenceService.validateSequence(cleanedSequence);
         boolean valid = errorMessage == null;
 
-        RestrictionEnzyme selectedEnzyme = analysisService.findEnzymeByName(enzyme);
+        RestrictionEnzyme selectedEnzyme = enzymeService.findEnzymeByName(enzyme);
 
         List<Fragment> fragments = new ArrayList<>();
         List<RestrictionEnzyme> cutterResults = new ArrayList<>();
@@ -65,9 +81,9 @@ public class SequenceController {
 
         if ("enzyme".equals(mode) && selectedEnzyme != null) {
 
-            cutCount = analysisService.countCutSites(cleanedSequence, selectedEnzyme.getRecognitionSite());
+            cutCount = fragmentAnalysisService.countCutSites(cleanedSequence, selectedEnzyme.getRecognitionSite());
 
-            fragments = analysisService.generateFragments(cleanedSequence, selectedEnzyme.getRecognitionSite());
+            fragments = fragmentAnalysisService.generateFragments(cleanedSequence, selectedEnzyme.getRecognitionSite());
 
             AnalysisResult result = new AnalysisResult(cleanedSequence, enzyme, fragments, LocalDateTime.now());
 
@@ -75,10 +91,10 @@ public class SequenceController {
         }
 
         else if ("single".equals(mode)) {
-            cutterResults = analysisService.findSingleOrDoubleCutters(cleanedSequence, 1);
+            cutterResults = fragmentAnalysisService.findSingleOrDoubleCutters(cleanedSequence, 1);
         }
         else if ("double".equals(mode)) {
-            cutterResults = analysisService.findSingleOrDoubleCutters(cleanedSequence, 2);
+            cutterResults = fragmentAnalysisService.findSingleOrDoubleCutters(cleanedSequence, 2);
         }
 
         model.addAttribute("originalInput", sequence);
@@ -100,7 +116,7 @@ public class SequenceController {
             @RequestParam String sequence
     ) {
 
-        String fasta = analysisService.formatFasta("Fragment_" + id, sequence);
+        String fasta = fastaService.formatFasta("Fragment_" + id, sequence);
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=fragment_"
                         + id + ".fasta").contentType(MediaType.TEXT_PLAIN).body(fasta);
