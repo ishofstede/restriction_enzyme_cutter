@@ -9,21 +9,36 @@
 
 <form action="/analyze" method="post">
 
-    <label for="sequence">DNA Sequence:</label>
-    <br>
+    <label>DNA Sequence:</label>
+    <br><br>
 
-    <textarea
-            id="sequence"
-            name="sequence"
-            rows="10"
-            cols="60">
-    </textarea>
+    <textarea name="sequence" rows="12" cols="70"></textarea>
 
     <br><br>
 
-    <button type="submit">
-        Analyze
-    </button>
+    <label>Restriction Enzyme:</label>
+    <br><br>
+
+    <select name="enzyme">
+        <option th:each="enzyme : ${enzymes}"
+                th:value="${enzyme.name}"
+                th:text="${enzyme.name}">
+        </option>
+    </select>
+
+    <br><br>
+
+    <h3>Analysis Mode</h3>
+
+    <input type="radio" name="mode" value="enzyme" checked> Selected Enzyme
+    <br>
+    <input type="radio" name="mode" value="single"> Single Cutters
+    <br>
+    <input type="radio" name="mode" value="double"> Double Cutters
+
+    <br><br>
+
+    <button type="submit">Analyze</button>
 
 </form>
 

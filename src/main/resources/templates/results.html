@@ -3,29 +3,162 @@
 <head>
     <title>Results</title>
 </head>
-
 <body>
 
-<h1>Analysis Result</h1>
+<h1>DNA Restriction Analysis Results</h1>
 
-<h2>Original Input</h2>
+<div th:if="${!valid}">
 
-<pre th:text="${originalInput}"></pre>
+    <h2>Error</h2>
 
-<h2>Cleaned Sequence</h2>
+    <p th:text="${errorMessage}"></p>
 
-<p th:text="${cleanedSequence}"></p>
+    <br>
 
-<h2>Validation</h2>
+    <a href="/">Back</a>
 
-<p th:if="${valid}">
-    DNA sequence is valid.
-</p>
+</div>
 
-<p th:unless="${valid}">
-    DNA sequence is NOT valid.
-</p>
+<div th:if="${valid}">
+
+    <h2>Input Summary</h2>
+
+    <p>
+        <strong>Sequence Length:</strong>
+        <span th:text="${cleanedSequence.length()}"></span>
+    </p>
+
+    <p th:if="${mode == 'enzyme'}">
+
+        <strong>Selected Enzyme:</strong>
+
+        <span th:text="${selectedEnzyme.name}"></span>
+
+        (<span th:text="${selectedEnzyme.recognitionSite}"></span>)
+
+    </p>
+
+    <p th:if="${mode == 'enzyme'}">
+
+        <strong>Number of Cut Sites:</strong>
+
+        <span th:text="${cutCount}"></span>
+
+    </p>
+
+    <!-- NO CUTS -->
+
+    <div th:if="${mode == 'enzyme' and fragments.isEmpty()}">
+
+        <p>No fragments generated.</p>
+
+    </div>
+
+    <!-- FRAGMENT TABLE -->
+
+    <div th:if="${mode == 'enzyme' and !fragments.isEmpty()}">
+
+        <h2>Fragments</h2>
+
+        <table border="1">
+
+            <tr>
+                <th>Start</th>
+                <th>End</th>
+                <th>Length</th>
+                <th>GC %</th>
+                <th>Molecular Weight</th>
+                <th>FASTA</th>
+            </tr>
+
+            <tr th:each="fragment : ${fragments}">
+
+                <td th:text="${fragment.start}"></td>
+
+                <td th:text="${fragment.end}"></td>
+
+                <td th:text="${fragment.length}"></td>
+
+                <td th:text="${#numbers.formatDecimal(fragment.gcPercent, 1, 2)}"></td>
+
+                <td th:text="${#numbers.formatDecimal(fragment.molecularWeight, 1, 2)}"></td>
+
+                <td>
+
+                    <a th:href="@{/fragment/{id}/fasta(
+                        id=${fragment.start},
+                        sequence=${fragment.sequence}
+                    )}">
+
+                        Download FASTA
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+    <!-- SINGLE / DOUBLE CUTTERS -->
+
+    <div th:if="${mode == 'single' or mode == 'double'}">
+
+        <h2>Cutter Results</h2>
+
+        <table border="1">
+
+            <tr>
+                <th>Enzyme</th>
+                <th>Recognition Site</th>
+            </tr>
+
+            <tr th:each="enzyme : ${cutterResults}">
+
+                <td th:text="${enzyme.name}"></td>
+
+                <td th:text="${enzyme.recognitionSite}"></td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+    <!-- HISTORY -->
+
+    <h2>Recent Analyses</h2>
+
+    <table border="1">
+
+        <tr>
+            <th>Timestamp</th>
+            <th>Enzyme</th>
+            <th>Sequence Length</th>
+            <th>Fragments</th>
+        </tr>
+
+        <tr th:each="item : ${history}">
+
+            <td th:text="${item.timestamp}"></td>
+
+            <td th:text="${item.enzymeName}"></td>
+
+            <td th:text="${item.sequence.length()}"></td>
+
+            <td th:text="${item.fragments.size()}"></td>
+
+        </tr>
+
+    </table>
+
+</div>
+
+<br>
 
 <a href="/">Back</a>
 
 </body>
+</html>
