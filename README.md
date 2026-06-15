@@ -30,7 +30,7 @@ No database is used. History is stored in memory.
 
 ## Project Structure
 
-    ```
+```bash
 src/main/java/nl.bioinf.ishofstede
 ├── controller/
 │   └── SequenceController
