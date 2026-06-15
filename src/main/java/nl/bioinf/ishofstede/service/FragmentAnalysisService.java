@@ -7,15 +7,27 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Service responsible for restriction enzyme analysis of DNA sequences.
+ * it identifies restriction enzyme cut sites, calculates fragment boundaries,and computes biological properties
+ * such as GC content and molecular weight. It also supports finding enzymes that cut a sequence once or twice.
+ */
 @Service
 public class FragmentAnalysisService {
 
     private final EnzymeService enzymeService;
 
     public FragmentAnalysisService( EnzymeService enzymeService){
-       this.enzymeService = enzymeService;
+        this.enzymeService = enzymeService;
     }
 
+    /**
+     * Counts how many times a restriction enzyme recognition site appears in a DNA sequence.
+     * @param sequence DNA sequence
+     * @param recognitionsite restriction enzyme recognition sequence
+     * @return number of cut sites found in the sequence
+     */
     public int countCutSites(String sequence, String recognitionsite) {
 
         int count = 0;
@@ -30,6 +42,12 @@ public class FragmentAnalysisService {
         return count;
     }
 
+    /**
+     * Finds all cut positions of a restriction enzyme in a DNA sequence.
+     * @param sequence DNA sequence
+     * @param recognitionSite enzyme recognition sequence
+     * @return list of starting points where the enzyme cuts
+     */
     public List<Integer> findCutPositions(String sequence, String recognitionSite) {
 
         List<Integer> cuts = new ArrayList<>();
@@ -44,6 +62,11 @@ public class FragmentAnalysisService {
         return cuts;
     }
 
+    /**
+     * Calculates GC content percentage of DNA fragment.
+     * @param sequence DNA fragment
+     * @return GC percentage
+     */
     public double calculateGCPercent(String sequence){
 
         if (sequence.isEmpty()){
@@ -61,6 +84,11 @@ public class FragmentAnalysisService {
         return  (gc * 100.0) / sequence.length();
     }
 
+    /**
+     * Calculates molecular weight of DNA fragment.
+     * @param sequence DNA fragment
+     * @return molecular weight
+     */
     public double calculateMolecularWeight(String sequence) {
 
         double weight = 0;
@@ -87,6 +115,19 @@ public class FragmentAnalysisService {
         return weight;
     }
 
+
+    /**
+     * Generates DNA fragments based on restriction enzyme cut positions.
+     * The sequence is split at every cut site, each fragment includes:
+     * - start and end position
+     * - length
+     * - GC content
+     * - molecular weight
+     * - DNA sequence
+     * @param sequence DNA sequence
+     * @param recognitionSite restriction enzyme recognition sequence
+     * @return list of generated fragments
+     */
     public List<Fragment> generateFragments(String sequence, String recognitionSite) {
 
         List<Integer> cuts = findCutPositions(sequence, recognitionSite);
@@ -130,6 +171,12 @@ public class FragmentAnalysisService {
         return fragments;
     }
 
+    /**
+     * Finds restriction enzymes that cut a sequence 1 or 2 times, aka "single cutters" and "double cutters".
+     * @param sequence DNA sequence
+     * @param requiredCuts number of allowed cut sites
+     * @return list of matching restriction enzymes
+     */
     public List<RestrictionEnzyme> findSingleOrDoubleCutters(String sequence, int requiredCuts){
         List<RestrictionEnzyme> matches = new ArrayList<>();
 

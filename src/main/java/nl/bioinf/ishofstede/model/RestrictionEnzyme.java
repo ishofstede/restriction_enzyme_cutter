@@ -1,9 +1,17 @@
 package nl.bioinf.ishofstede.model;
 
+/**
+ * Represents a restriction enzyme used in DNA analysis.
+ * A restriction enzyme recognizes a specific DNA sequence and used to simulate DNA cutting
+ * This model stores only immutable metadata:
+ * - enzyme name
+ * - recognition sequence
+ */
 public class RestrictionEnzyme {
 
-    private String name;
-    private String recognitionSite;
+    private final String name;
+    private final String recognitionSite;
+
 
     public RestrictionEnzyme(
             String name,

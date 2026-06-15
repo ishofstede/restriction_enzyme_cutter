@@ -108,7 +108,14 @@
 
         <h2>Cutter Results</h2>
 
-        <table border="1">
+        <div th:if="${noCutterResults}">
+            <p>
+                No enzymes were found that match the selected search criteria.
+            </p>
+        </div>
+
+        <table border="1"
+               th:if="${!noCutterResults}">
 
             <tr>
                 <th>Enzyme</th>
@@ -116,11 +123,8 @@
             </tr>
 
             <tr th:each="enzyme : ${cutterResults}">
-
                 <td th:text="${enzyme.name}"></td>
-
                 <td th:text="${enzyme.recognitionSite}"></td>
-
             </tr>
 
         </table>

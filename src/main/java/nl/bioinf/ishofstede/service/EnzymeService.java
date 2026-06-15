@@ -6,9 +6,19 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service responsible for managing restriction enzyme data.
+ * This class provides a in-memory list of restriction enzymes.
+ * The enzyme database includes at least 15 restriction enzymes.
+ */
 @Service
 public class EnzymeService {
 
+    /**
+     * Retrieves the list of supported restriction enzymes.
+     * Each enzyme consists of a name and a recognition DNA sequence.
+     * @return list of restriction enzymes
+     */
     public List<RestrictionEnzyme> getEnzymes() {
 
         List<RestrictionEnzyme> enzymes = new ArrayList<>();
@@ -32,6 +42,11 @@ public class EnzymeService {
         return enzymes;
     }
 
+    /**
+     * Finds a restriction enzyme by name
+     * @param name name of the enzyme (bvb EcoRI)
+     * @return matching RestrictionEnzyme object, or null if not found
+     */
     public RestrictionEnzyme findEnzymeByName(String name) {
 
         for (RestrictionEnzyme enzyme : getEnzymes()) {

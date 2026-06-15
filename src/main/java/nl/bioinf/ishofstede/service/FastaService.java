@@ -2,13 +2,21 @@ package nl.bioinf.ishofstede.service;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * Service responsible for formatting DNA sequences into FASTA format.
+ * This class converts raw DNA sequences into FASTA output.
+ */
 @Service
 public class FastaService {
 
-    public String formatFasta(
-            String header,
-            String sequence
-    ) {
+    /**
+     * Converts a DNA sequence into FASTA format.
+     * The output includes header line
+     * @param header FASTA header
+     * @param sequence DNA sequence
+     * @return formatted FASTA string
+     */
+    public String formatFasta(String header, String sequence) {
 
         StringBuilder fasta = new StringBuilder();
 

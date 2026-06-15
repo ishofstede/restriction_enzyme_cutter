@@ -20,7 +20,17 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Controller for the DNA Restriction Enzyme Analysis web application.
+ * This controller handles all HTTP requests related to:
+ * - DNA sequence input and validation
+ * - restriction enzyme selection
+ * - fragment generation
+ * - single/double cutter search
+ * - FASTA file download
+ * - analysis history display
+ * It acts as the main coordinator between the UI (Thymeleaf views) and the backend service layer.
+ */
 @Controller
 public class SequenceController {
 
@@ -44,6 +54,11 @@ public class SequenceController {
         this.historyService = historyService;
     }
 
+    /**
+     * Displays the home page with available restriction enzymes.
+     * @param model Spring MVC model used to pass enzyme list to the view
+     * @return name of the Thymeleaf template (index)
+     */
     @GetMapping("/")
     public String home(Model model) {
 
@@ -55,6 +70,19 @@ public class SequenceController {
         return "index";
     }
 
+    /**
+     * Handles DNA analysis requests.
+     * Depending on the selected mode, this method:
+     * - performs restriction enzyme cutting (mode = enzyme)
+     * - finds single cutters (mode = single)
+     * - finds double cutters (mode = double)
+     * Validates input, generates fragments, and stores results in history.
+     * @param sequence raw DNA or FASTA input
+     * @param enzyme selected restriction enzyme name
+     * @param mode analysis mode (enzyme/single/double)
+     * @param model Spring MVC model for passing results to the view
+     * @return results view
+     */
     @PostMapping("/analyze")
     public String analyze(
             @RequestParam String sequence,
@@ -97,6 +125,13 @@ public class SequenceController {
             cutterResults = fragmentAnalysisService.findSingleOrDoubleCutters(cleanedSequence, 2);
         }
 
+        boolean noCutterResults = cutterResults.isEmpty();
+
+        model.addAttribute(
+                "noCutterResults",
+                noCutterResults
+        );
+
         model.addAttribute("originalInput", sequence);
         model.addAttribute("cleanedSequence", cleanedSequence);
         model.addAttribute("valid", true);
@@ -110,6 +145,12 @@ public class SequenceController {
         return "results";
     }
 
+    /**
+     * Generates a FASTA formatted download for a DNA fragment.
+     * @param id fragment identifier used in filename
+     * @param sequence DNA sequence of the fragment
+     * @return FASTA file as downloadable text response
+     */
     @GetMapping("/fragment/{id}/fasta")
     public ResponseEntity<String> downloadFasta(
             @PathVariable int id,
@@ -119,6 +160,6 @@ public class SequenceController {
         String fasta = fastaService.formatFasta("Fragment_" + id, sequence);
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=fragment_"
-                        + id + ".fasta").contentType(MediaType.TEXT_PLAIN).body(fasta);
+                + id + ".fasta").contentType(MediaType.TEXT_PLAIN).body(fasta);
     }
 }

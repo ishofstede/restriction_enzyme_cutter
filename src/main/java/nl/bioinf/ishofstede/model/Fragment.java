@@ -1,5 +1,18 @@
 package nl.bioinf.ishofstede.model;
 
+/**
+ * Represents a DNA fragment generated after restriction enzyme interaction.
+ * A fragment is a segment of DNA produced when a restriction enzyme
+ * cuts a DNA sequence at specific recognition sites.
+ * Each fragment contains:
+ * - start and end position in DNA sequence
+ * - fragment length
+ * - GC content percentage
+ * - molecular weight
+ * - DNA sequence
+ * This class is immutable and is used as output of the restriction
+ * enzyme analysis process.
+ */
 public class Fragment {
 
     private final int start;
