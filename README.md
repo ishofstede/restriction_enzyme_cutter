@@ -30,6 +30,7 @@ No database is used. History is stored in memory.
 
 ## Project Structure
 
+    ```
 src/main/java/nl.bioinf.ishofstede
 ├── controller/
 │   └── SequenceController
@@ -45,6 +46,7 @@ src/main/java/nl.bioinf.ishofstede
     ├── RestrictionEnzyme
     ├── Fragment
     └── AnalysisResult
+```
 
 ## How to run
 
